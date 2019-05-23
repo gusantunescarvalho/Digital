@@ -21,11 +21,20 @@ public class PautaController {
         this.pautaRepository = pautaRepository;
     }
 
+    /**
+     * Retorna uma lista de todas as Pautas.
+     * @return lista de todas as Pautas.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public Iterable<Pauta> findAll() {
         return pautaRepository.findAll();
     }
 
+    /**
+     * Retorna uma Pauta pelo seu identificador.
+     * @param id identificador da Pauta.
+     * @return a Pauta conforme identificador.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public HttpEntity<Pauta> findById(@PathVariable Long id) {
         Optional<Pauta> pauta = pautaRepository.findById(id);
@@ -33,16 +42,21 @@ public class PautaController {
         return response;
     }
 
+    /**
+     * Cria uma nova Pauta.
+     * @param pauta a Pauta para criar.
+     * @return a Pauta criada.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public Pauta create(@RequestBody Pauta pauta) {
         return pautaRepository.save(pauta);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
-    public void delete(@RequestBody Pauta pauta) {
-        pautaRepository.delete(pauta);
-    }
-
+    /**
+     * Deleta uma Pauta pelo seu identificador.
+     * @param id identificador da Pauta.
+     * @return código HTTP de resposta de acordo.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public HttpEntity delete(@PathVariable Long id) {
         Optional<Pauta> pauta = pautaRepository.findById(id);

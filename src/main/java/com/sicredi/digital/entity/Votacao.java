@@ -1,6 +1,7 @@
 package com.sicredi.digital.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -8,8 +9,12 @@ import java.util.Set;
 public class Votacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private boolean ativa;
+    private Date dataHoraAtivacao;
+    private Long duracao;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pauta_id")
@@ -30,6 +35,30 @@ public class Votacao {
         this.id = id;
     }
 
+    public boolean isAtiva() {
+        return ativa;
+    }
+
+    public void setAtiva(boolean ativa) {
+        this.ativa = ativa;
+    }
+
+    public Date getDataHoraAtivacao() {
+        return dataHoraAtivacao;
+    }
+
+    public void setDataHoraAtivacao(Date dataHoraAtivacao) {
+        this.dataHoraAtivacao = dataHoraAtivacao;
+    }
+
+    public Long getDuracao() {
+        return duracao;
+    }
+
+    public void setDuracao(Long duracao) {
+        this.duracao = duracao;
+    }
+
     public Pauta getPauta() {
         return pauta;
     }
@@ -44,13 +73,5 @@ public class Votacao {
 
     public void setVotos(Set<Voto> votos) {
         this.votos = votos;
-    }
-
-    public void addVoto(Voto voto) {
-        votos.add(voto);
-    }
-
-    public void removeVoto(Voto voto) {
-        votos.remove(voto);
     }
 }

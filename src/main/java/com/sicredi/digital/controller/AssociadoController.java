@@ -1,9 +1,7 @@
 package com.sicredi.digital.controller;
 
 import com.sicredi.digital.entity.Associado;
-import com.sicredi.digital.entity.Votacao;
 import com.sicredi.digital.repository.AssociadoRepository;
-import com.sicredi.digital.service.VotacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -23,11 +21,20 @@ public class AssociadoController {
         this.associadoRepository = associadoRepository;
     }
 
+    /**
+     * Retorna uma lista de todos os Associados.
+     * @return lista de todos os Associados.
+     */
     @RequestMapping(method = RequestMethod.GET)
     public Iterable<Associado> findAll() {
         return associadoRepository.findAll();
     }
 
+    /**
+     * Retorna um Associado pelo seu identificador.
+     * @param id identificador do Associado.
+     * @return o Associado conforme identificador.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public HttpEntity<Associado> findById(@PathVariable Long id) {
         Optional<Associado> associado = associadoRepository.findById(id);
@@ -35,16 +42,21 @@ public class AssociadoController {
         return response;
     }
 
+    /**
+     * Cria um novo Associado.
+     * @param associado o Associado para criar.
+     * @return o Associado criado.
+     */
     @RequestMapping(method = RequestMethod.POST)
     public Associado create(@RequestBody Associado associado) {
         return associadoRepository.save(associado);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
-    public void delete(@RequestBody Associado associado) {
-        associadoRepository.delete(associado);
-    }
-
+    /**
+     * Deleta um Associado pelo seu identificador.
+     * @param id identificador do Associado.
+     * @return código HTTP de resposta de acordo.
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public HttpEntity delete(@PathVariable Long id) {
         Optional<Associado> associado = associadoRepository.findById(id);
