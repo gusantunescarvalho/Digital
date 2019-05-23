@@ -11,8 +11,6 @@ public class DigitalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DigitalApplication.class, args);
-
-		EntityManagerFactory factory = Persistence.createEntityManagerFactory("tarefas");
 	}
 
 }

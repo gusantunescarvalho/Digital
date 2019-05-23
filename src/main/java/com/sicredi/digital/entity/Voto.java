@@ -16,11 +16,7 @@ public class Voto {
     @JoinColumn(name = "associado_id")
     private Associado associado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "votacao_id")
-    private Votacao votacao;
-
-    private boolean voto;
+    private boolean parecer;
 
     public Long getId() {
         return id;
@@ -38,20 +34,12 @@ public class Voto {
         this.associado = associado;
     }
 
-    public boolean isVoto() {
-        return voto;
+    public boolean isParecer() {
+        return parecer;
     }
 
-    public void setVoto(boolean voto) {
-        this.voto = voto;
-    }
-
-    public Votacao getVotacao() {
-        return votacao;
-    }
-
-    public void setVotacao(Votacao votacao) {
-        this.votacao = votacao;
+    public void setParecer(boolean parecer) {
+        this.parecer = parecer;
     }
 
     @Override

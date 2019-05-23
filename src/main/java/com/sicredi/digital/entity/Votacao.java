@@ -1,15 +1,18 @@
 package com.sicredi.digital.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 public class Votacao {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "pauta_id")
     private Pauta pauta;
 
     @OneToMany(
@@ -18,6 +21,14 @@ public class Votacao {
     )
     @JoinColumn(name = "voto_id")
     private Set<Voto> votos = new LinkedHashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Pauta getPauta() {
         return pauta;
@@ -37,11 +48,9 @@ public class Votacao {
 
     public void addVoto(Voto voto) {
         votos.add(voto);
-        voto.setVotacao(this);
     }
 
     public void removeVoto(Voto voto) {
         votos.remove(voto);
-        voto.setVotacao(null);
     }
 }
