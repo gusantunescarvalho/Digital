@@ -37,14 +37,14 @@ public class VotacaoControllerTest extends AbstractTest {
         String uri = "/votacao";
 
         Pauta pauta = new Pauta();
-        pauta.setId(new Long(1));
+        pauta.setId(1L);
         pauta.setTitulo("Nova Previdência");
         pauta.setDescricao("Votação para aprovar a nova previdência");
 
         Votacao votacao = new Votacao();
-        votacao.setId(new Long(1));
+        votacao.setId(1L);
         votacao.setPauta(pauta);
-        votacao.setDuracao(new Long(10));
+        votacao.setDuracao(10L);
         votacao.setAtiva(true);
 
         given(votacaoService.createVotacao(any(Long.class), any(Long.class))).willReturn(votacao);
@@ -79,19 +79,19 @@ public class VotacaoControllerTest extends AbstractTest {
         String uri = "/votacao/{id}";
 
         Pauta pauta = new Pauta();
-        pauta.setId(new Long(1));
+        pauta.setId(1L);
         pauta.setTitulo("Nova Previdência");
         pauta.setDescricao("Votação para aprovar a nova previdência");
 
         Votacao votacao = new Votacao();
-        votacao.setId(new Long(1));
+        votacao.setId(1L);
         votacao.setPauta(pauta);
-        votacao.setDuracao(new Long(10));
+        votacao.setDuracao(10L);
         votacao.setAtiva(true);
 
         VotacaoResult votacaoResult = new VotacaoResult();
-        votacaoResult.setTotalFavor(new Long(12));
-        votacaoResult.setTotalContra(new Long(6));
+        votacaoResult.setTotalFavor(12L);
+        votacaoResult.setTotalContra(6L);
         votacaoResult.setVotacao(votacao);
 
         given(votacaoService.getVotacao(any(Long.class))).willReturn(votacaoResult);
@@ -136,22 +136,22 @@ public class VotacaoControllerTest extends AbstractTest {
         String uri = "/voto";
 
         Pauta pauta = new Pauta();
-        pauta.setId(new Long(1));
+        pauta.setId(1L);
         pauta.setTitulo("Nova Previdência");
         pauta.setDescricao("Votação para aprovar a nova previdência");
 
         Associado associado = new Associado();
-        associado.setId(new Long(1));
+        associado.setId(1L);
 
         Voto voto = new Voto();
-        voto.setId(new Long(1));
+        voto.setId(1L);
         voto.setAssociado(associado);
         voto.setParecer(true);
 
         Votacao votacao = new Votacao();
-        votacao.setId(new Long(1));
+        votacao.setId(1L);
         votacao.setPauta(pauta);
-        votacao.setDuracao(new Long(10));
+        votacao.setDuracao(10L);
         votacao.setAtiva(true);
         votacao.getVotos().add(voto);
 
