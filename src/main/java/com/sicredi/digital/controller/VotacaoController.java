@@ -5,7 +5,10 @@ import com.sicredi.digital.entity.Votacao;
 import com.sicredi.digital.service.VotacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -38,8 +41,9 @@ public class VotacaoController {
      * @return objeto contendo a Sessão de Votação mais uma contagem de votos a FAVOR e CONTRA desta sessão.
      */
     @RequestMapping(method = RequestMethod.GET, value="votacao/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public VotacaoResult getVotacao(@PathVariable("id") Long id) {
-        return votacaoService.getVotacao(id);
+    public HttpEntity<VotacaoResult> getVotacao(@PathVariable("id") Long id) {
+        VotacaoResult votacaoResult = votacaoService.getVotacao(id);
+        return votacaoResult.getVotacao() != null ? new ResponseEntity<>(votacaoResult, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**

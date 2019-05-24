@@ -2,7 +2,6 @@ package com.sicredi.digital.controller;
 
 import com.sicredi.digital.AbstractTest;
 import com.sicredi.digital.entity.Pauta;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -14,12 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PautaControllerTest extends AbstractTest {
-
-    @Override
-    @Before
-    public void setUp() {
-        super.setUp();
-    }
 
     /**
      * Teste criar nova Pauta.
