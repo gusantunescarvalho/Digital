@@ -13,7 +13,6 @@ import java.util.Set;
 @Setter
 public class VotacaoDTO {
 
-    private Long id;
     private boolean ativa;
     private Date dataHoraAtivacao;
     private Long duracao;

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class VotoDTO {
 
-    private Long id;
     private AssociadoDTO associado;
     private boolean parecer;
 

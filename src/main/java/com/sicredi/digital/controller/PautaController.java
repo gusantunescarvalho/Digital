@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -50,7 +51,7 @@ public class PautaController {
      * @return a Pauta criada.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public HttpEntity<PautaRespostaDTO> create(@RequestBody PautaDTO pautaDTO) {
+    public HttpEntity<PautaRespostaDTO> create(@RequestBody @Valid PautaDTO pautaDTO) {
         Pauta pauta = pautaRepository.save(pautaDTO.transformaParaObjeto());
         return new ResponseEntity<>(PautaRespostaDTO.transformaEmDTO(pauta), HttpStatus.CREATED);
     }

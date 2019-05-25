@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -50,7 +51,7 @@ public class AssociadoController {
      * @return o Associado criado.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public HttpEntity<AssociadoRespostaDTO> create(@RequestBody AssociadoDTO associadoDTO) {
+    public HttpEntity<AssociadoRespostaDTO> create(@RequestBody @Valid AssociadoDTO associadoDTO) {
         Associado associado = associadoRepository.save(associadoDTO.transformaParaObjeto());
         return new ResponseEntity<>(AssociadoRespostaDTO.transformaEmDTO(associado), HttpStatus.CREATED);
     }
