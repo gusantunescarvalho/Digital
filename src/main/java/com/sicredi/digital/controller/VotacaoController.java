@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/votacao")
 public class VotacaoController {
 
     private final VotacaoService votacaoService;
@@ -28,11 +29,11 @@ public class VotacaoController {
      * @param timeout tempo de duração da Sessão de Votação em segundos. Default = 60 segundos.
      * @return a Sessão de Votação criada.
      */
-    @RequestMapping(method = RequestMethod.POST, value="votacao")
-    public Votacao createVotacao(@RequestParam("pautaId") Long pautaId, @RequestParam(value="timeout", required = false, defaultValue = "60") Long timeout) {
+    @RequestMapping(method = RequestMethod.POST)
+    public HttpEntity<Votacao> createVotacao(@RequestParam("pautaId") Long pautaId, @RequestParam(value="timeout", required = false, defaultValue = "60") Long timeout) {
         Votacao votacao = votacaoService.createVotacao(pautaId, timeout);
         votacaoService.initSession(votacao.getId(), timeout);
-        return votacao;
+        return new ResponseEntity<>(votacao, HttpStatus.CREATED);
     }
 
     /**
@@ -40,7 +41,7 @@ public class VotacaoController {
      * @param id identificador da Sessão de Votação.
      * @return objeto contendo a Sessão de Votação mais uma contagem de votos a FAVOR e CONTRA desta sessão.
      */
-    @RequestMapping(method = RequestMethod.GET, value="votacao/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<VotacaoResult> getVotacao(@PathVariable("id") Long id) {
         VotacaoResult votacaoResult = votacaoService.getVotacao(id);
         return votacaoResult.getVotacao() != null ? new ResponseEntity<>(votacaoResult, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -48,15 +49,16 @@ public class VotacaoController {
 
     /**
      * Adiciona um voto de um Associado em uma dada Sessão de Votação.
-     * @param votacaoId identificador da Sessão de Votação.
+     * @param id identificador da Sessão de Votação.
      * @param associadoId identificador do Associado.
      * @param parecer se a FAVOR (true) ou CONTRA (false).
      * @return a Sessão de Votação com o novo voto computado.
      */
-    @RequestMapping(method = RequestMethod.POST, value="voto")
-    public Votacao addVoto(@RequestParam("votacaoId") Long votacaoId,
-                           @RequestParam("associadoId") Long associadoId,
-                           @RequestParam("parecer") boolean parecer) {
-        return votacaoService.addVoto(votacaoId, associadoId, parecer);
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
+    public HttpEntity<Votacao> addVoto(@PathVariable("id") Long id,
+                                       @RequestParam("associadoId") Long associadoId,
+                                       @RequestParam("parecer") boolean parecer) {
+        Votacao votacao = votacaoService.addVoto(id, associadoId, parecer);
+        return new ResponseEntity<>(votacao, HttpStatus.OK);
     }
 }

@@ -48,8 +48,9 @@ public class PautaController {
      * @return a Pauta criada.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Pauta create(@RequestBody Pauta pauta) {
-        return pautaRepository.save(pauta);
+    public HttpEntity<Pauta> create(@RequestBody Pauta pauta) {
+        Pauta pautaNova = pautaRepository.save(pauta);
+        return new ResponseEntity<>(pautaNova, HttpStatus.CREATED);
     }
 
     /**

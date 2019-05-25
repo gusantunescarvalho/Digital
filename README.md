@@ -207,7 +207,7 @@ Cada associado poderá votar apenas 1 vez em cada sessão.
 Para enviar o voto, é preciso espeficiar o identificador da Sessão de Votação, o identificador do Associado e mais o Parecer.
 O parecer com valor "true" significa "a Favor", enquanto o parecer com valor "false" significa "Contra".
 
-curl -X POST 'http://localhost:8080/voto?votacaoId=1&associadoId=1&parecer=true' 
+curl -X PATCH 'http://localhost:8080/votacao/1?associadoId=1&parecer=true'
 
 Retorno:
 ```
@@ -236,12 +236,12 @@ Retorno:
 ```
 #### Mais votos
 
-curl -X POST 'http://localhost:8080/voto?votacaoId=1&associadoId=2&parecer=true' \
-curl -X POST 'http://localhost:8080/voto?votacaoId=1&associadoId=3&parecer=false' 
+curl -X PATCH 'http://localhost:8080/votacao/1?associadoId=2&parecer=true' \
+curl -X PATCH 'http://localhost:8080/votacao/1?associadoId=3&parecer=false'
 
-curl -X POST 'http://localhost:8080/voto?votacaoId=2&associadoId=1&parecer=false' \
-curl -X POST 'http://localhost:8080/voto?votacaoId=2&associadoId=2&parecer=false' \
-curl -X POST 'http://localhost:8080/voto?votacaoId=2&associadoId=3&parecer=true' 
+curl -X PATCH 'http://localhost:8080/votacao/2?associadoId=1&parecer=false' \
+curl -X PATCH 'http://localhost:8080/votacao/2?&associadoId=2&parecer=false' \
+curl -X PATCH 'http://localhost:8080/votacao/2?&associadoId=3&parecer=true'
 
 ## Resultado da Sessão de Votação
 

@@ -27,14 +27,14 @@ public class VotacaoControllerTest extends AbstractTest {
     @MockBean
     private VotacaoService votacaoService;
 
+    private static final String uri = "/votacao";
+
     /**
      * Teste criar nova Sessão de Votação com uma Pauta existente.
      * @throws Exception
      */
     @Test
     public void t01_criarNovaVotacaoTest() throws Exception {
-
-        String uri = "/votacao";
 
         Pauta pauta = new Pauta();
         pauta.setId(1L);
@@ -58,7 +58,7 @@ public class VotacaoControllerTest extends AbstractTest {
         ResultActions resultActions = mvc.perform(postRequest);
 
         resultActions.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.ativa").value("true"))
@@ -76,7 +76,7 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t02_getVotacaoExistenteTest() throws Exception {
 
-        String uri = "/votacao/{id}";
+        String _uri = uri + "/{id}";
 
         Pauta pauta = new Pauta();
         pauta.setId(1L);
@@ -96,7 +96,7 @@ public class VotacaoControllerTest extends AbstractTest {
 
         given(votacaoService.getVotacao(any(Long.class))).willReturn(votacaoResult);
 
-        mvc.perform(MockMvcRequestBuilders.get(uri, "1"))
+        mvc.perform(MockMvcRequestBuilders.get(_uri, "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -117,11 +117,11 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t03_getVotacaoInxistenteTest() throws Exception {
 
-        String uri = "/votacao/{id}";
+        String _uri = uri + "/{id}";
 
         given(votacaoService.getVotacao(any(Long.class))).willReturn(new VotacaoResult());
 
-        mvc.perform(MockMvcRequestBuilders.get(uri, "1"))
+        mvc.perform(MockMvcRequestBuilders.get(_uri, "1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -133,7 +133,7 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t04_addVotoTest() throws Exception {
 
-        String uri = "/voto";
+        String _uri = uri + "/{id}";
 
         Pauta pauta = new Pauta();
         pauta.setId(1L);
@@ -157,8 +157,7 @@ public class VotacaoControllerTest extends AbstractTest {
 
         given(votacaoService.addVoto(any(Long.class), any(Long.class), any(Boolean.class))).willReturn(votacao);
 
-        MockHttpServletRequestBuilder postRequest = (MockMvcRequestBuilders.post(uri))
-                .param("votacaoId", "1")
+        MockHttpServletRequestBuilder postRequest = (MockMvcRequestBuilders.patch(_uri, "1"))
                 .param("associadoId", "1")
                 .param("parecer", "true");
 

@@ -48,8 +48,9 @@ public class AssociadoController {
      * @return o Associado criado.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public Associado create(@RequestBody Associado associado) {
-        return associadoRepository.save(associado);
+    public HttpEntity<Associado> create(@RequestBody Associado associado) {
+        Associado associadoNovo = associadoRepository.save(associado);
+        return new ResponseEntity<>(associadoNovo, HttpStatus.CREATED);
     }
 
     /**

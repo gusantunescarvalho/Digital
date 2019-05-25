@@ -31,7 +31,7 @@ public class PautaControllerTest extends AbstractTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(pauta)))
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value("1"));
     }
