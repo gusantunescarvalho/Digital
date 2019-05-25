@@ -35,7 +35,7 @@ curl -X POST http://localhost:8080/associado \
 curl -X POST http://localhost:8080/associado \
   -d '{ 
 	"nome" : "Associado para deletar", 
-	"cpf": "4444.4444.4444-44",
+	"cpf": "444.444.444-44",
 	"email": "associado@email.com"
 }'
 
@@ -69,7 +69,7 @@ Retorno:
     {
         "id": 4,
         "nome": "Associado para deletar",
-        "cpf": "4444.4444.4444-44",
+        "cpf": "444.444.444-44",
         "email": "associado@email.com"
     } 
 ]
