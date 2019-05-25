@@ -50,7 +50,6 @@ public class VotacaoService {
             votacao.setDuracao(timeout);
             votacao.setPauta(pauta.get());
             Votacao votacaoPersist = this.votacaoRepository.save(votacao);
-            this.initSession(votacao.getId(), timeout);
             return VotacaoRespostaDTO.transformaEmDTO(votacaoPersist);
         } else {
             throw new IllegalArgumentException("Pauta não existe");

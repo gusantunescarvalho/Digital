@@ -33,6 +33,7 @@ public class VotacaoController {
     @RequestMapping(method = RequestMethod.POST)
     public HttpEntity<VotacaoRespostaDTO> createVotacao(@RequestParam("pautaId") Long pautaId, @RequestParam(value="timeout", required = false, defaultValue = "60") Long timeout) {
         VotacaoRespostaDTO votacaoRespostaDTO = votacaoService.createVotacao(pautaId, timeout);
+        votacaoService.initSession(votacaoRespostaDTO.getId(), timeout);
         return new ResponseEntity<>(votacaoRespostaDTO, HttpStatus.CREATED);
     }
 
