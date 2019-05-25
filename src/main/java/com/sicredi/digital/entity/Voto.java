@@ -1,11 +1,17 @@
 package com.sicredi.digital.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Voto {
 
     @Id
@@ -18,29 +24,11 @@ public class Voto {
 
     private boolean parecer;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Associado getAssociado() {
-        return associado;
-    }
-
-    public void setAssociado(Associado associado) {
+    public Voto(Associado associado, boolean parecer) {
         this.associado = associado;
-    }
-
-    public boolean isParecer() {
-        return parecer;
-    }
-
-    public void setParecer(boolean parecer) {
         this.parecer = parecer;
     }
+
 
     @Override
     public int hashCode() {

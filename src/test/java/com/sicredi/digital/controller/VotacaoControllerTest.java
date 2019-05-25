@@ -1,12 +1,12 @@
 package com.sicredi.digital.controller;
 
 import com.sicredi.digital.AbstractTest;
-import com.sicredi.digital.dto.VotacaoResult;
-import com.sicredi.digital.entity.Associado;
+import com.sicredi.digital.dto.*;
 import com.sicredi.digital.entity.Pauta;
 import com.sicredi.digital.entity.Votacao;
 import com.sicredi.digital.entity.Voto;
 import com.sicredi.digital.service.VotacaoService;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -27,7 +30,14 @@ public class VotacaoControllerTest extends AbstractTest {
     @MockBean
     private VotacaoService votacaoService;
 
-    private static final String uri = "/votacao";
+    private PautaRespostaDTO pautaRespostaDTO;
+    private VotacaoRespostaDTO votacaoRespostaDTO;
+
+    @Before
+    public void setUp() {
+        pautaRespostaDTO = new PautaRespostaDTO(1L, "Nova Previdência", "Votação para aprovar a nova previdência");
+        votacaoRespostaDTO = new VotacaoRespostaDTO(1L, true,null, 10L, pautaRespostaDTO, new LinkedHashSet<>() );
+    }
 
     /**
      * Teste criar nova Sessão de Votação com uma Pauta existente.
@@ -36,24 +46,13 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t01_criarNovaVotacaoTest() throws Exception {
 
-        Pauta pauta = new Pauta();
-        pauta.setId(1L);
-        pauta.setTitulo("Nova Previdência");
-        pauta.setDescricao("Votação para aprovar a nova previdência");
+        String uri = "/votacao";
 
-        Votacao votacao = new Votacao();
-        votacao.setId(1L);
-        votacao.setPauta(pauta);
-        votacao.setDuracao(10L);
-        votacao.setAtiva(true);
-
-        given(votacaoService.createVotacao(any(Long.class), any(Long.class))).willReturn(votacao);
+        given(votacaoService.createVotacao(any(Long.class), any(Long.class))).willReturn(votacaoRespostaDTO);
 
         MockHttpServletRequestBuilder postRequest = (MockMvcRequestBuilders.post(uri))
                 .param("pautaId", "1")
-                .param("timeout", "10")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(votacao));
+                .param("timeout", "10");
 
         ResultActions resultActions = mvc.perform(postRequest);
 
@@ -66,7 +65,6 @@ public class VotacaoControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.pauta.id").value("1"))
                 .andExpect(jsonPath("$.pauta.titulo").value("Nova Previdência"))
                 .andExpect(jsonPath("$.pauta.descricao").value("Votação para aprovar a nova previdência"));
-
     }
 
     /**
@@ -76,27 +74,16 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t02_getVotacaoExistenteTest() throws Exception {
 
-        String _uri = uri + "/{id}";
+        String uri = "/votacao/{id}";
 
-        Pauta pauta = new Pauta();
-        pauta.setId(1L);
-        pauta.setTitulo("Nova Previdência");
-        pauta.setDescricao("Votação para aprovar a nova previdência");
+        VotacaoResultadoRespostaDTO votacaoResultadoRespostaDTO = new VotacaoResultadoRespostaDTO();
+        votacaoResultadoRespostaDTO.setTotalFavor(12L);
+        votacaoResultadoRespostaDTO.setTotalContra(6L);
+        votacaoResultadoRespostaDTO.setVotacao(votacaoRespostaDTO);
 
-        Votacao votacao = new Votacao();
-        votacao.setId(1L);
-        votacao.setPauta(pauta);
-        votacao.setDuracao(10L);
-        votacao.setAtiva(true);
+        given(votacaoService.getVotacaoResultado(any(Long.class))).willReturn(votacaoResultadoRespostaDTO);
 
-        VotacaoResult votacaoResult = new VotacaoResult();
-        votacaoResult.setTotalFavor(12L);
-        votacaoResult.setTotalContra(6L);
-        votacaoResult.setVotacao(votacao);
-
-        given(votacaoService.getVotacao(any(Long.class))).willReturn(votacaoResult);
-
-        mvc.perform(MockMvcRequestBuilders.get(_uri, "1"))
+        mvc.perform(MockMvcRequestBuilders.get(uri, "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -117,11 +104,11 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t03_getVotacaoInxistenteTest() throws Exception {
 
-        String _uri = uri + "/{id}";
+        String uri = "/votacao/{id}";
 
-        given(votacaoService.getVotacao(any(Long.class))).willReturn(new VotacaoResult());
+        given(votacaoService.getVotacaoResultado(any(Long.class))).willReturn(new VotacaoResultadoRespostaDTO());
 
-        mvc.perform(MockMvcRequestBuilders.get(_uri, "1"))
+        mvc.perform(MockMvcRequestBuilders.get(uri, "1"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -133,31 +120,17 @@ public class VotacaoControllerTest extends AbstractTest {
     @Test
     public void t04_addVotoTest() throws Exception {
 
-        String _uri = uri + "/{id}";
+        String uri = "/votacao/{id}";
 
-        Pauta pauta = new Pauta();
-        pauta.setId(1L);
-        pauta.setTitulo("Nova Previdência");
-        pauta.setDescricao("Votação para aprovar a nova previdência");
+        AssociadoRespostaDTO associadoRespostaDTO = new AssociadoRespostaDTO(1L, "João da Silva", "111.111.111-11","joao@email.com");
+        VotoRespostaDTO votoRespostaDTO = new VotoRespostaDTO(1L, associadoRespostaDTO, true);
+        Set<VotoRespostaDTO> votosRespostaDTO = new LinkedHashSet<>();
+        votosRespostaDTO.add(votoRespostaDTO);
+        votacaoRespostaDTO = new VotacaoRespostaDTO(1L, true,null, 10L, pautaRespostaDTO, votosRespostaDTO );
 
-        Associado associado = new Associado();
-        associado.setId(1L);
+        given(votacaoService.addVoto(any(Long.class), any(Long.class), any(Boolean.class))).willReturn(votacaoRespostaDTO);
 
-        Voto voto = new Voto();
-        voto.setId(1L);
-        voto.setAssociado(associado);
-        voto.setParecer(true);
-
-        Votacao votacao = new Votacao();
-        votacao.setId(1L);
-        votacao.setPauta(pauta);
-        votacao.setDuracao(10L);
-        votacao.setAtiva(true);
-        votacao.getVotos().add(voto);
-
-        given(votacaoService.addVoto(any(Long.class), any(Long.class), any(Boolean.class))).willReturn(votacao);
-
-        MockHttpServletRequestBuilder postRequest = (MockMvcRequestBuilders.patch(_uri, "1"))
+        MockHttpServletRequestBuilder postRequest = (MockMvcRequestBuilders.patch(uri, "1"))
                 .param("associadoId", "1")
                 .param("parecer", "true");
 
@@ -174,6 +147,9 @@ public class VotacaoControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.pauta.descricao").value("Votação para aprovar a nova previdência"))
                 .andExpect(jsonPath("$.votos[0].id").value("1"))
                 .andExpect(jsonPath("$.votos[0].associado.id").value("1"))
+                .andExpect(jsonPath("$.votos[0].associado.nome").value("João da Silva"))
+                .andExpect(jsonPath("$.votos[0].associado.cpf").value("111.111.111-11"))
+                .andExpect(jsonPath("$.votos[0].associado.email").value("joao@email.com"))
                 .andExpect(jsonPath("$.votos[0].parecer").value("true"));
 
     }

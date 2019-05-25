@@ -1,6 +1,7 @@
 package com.sicredi.digital.service;
 
-import com.sicredi.digital.dto.VotacaoResult;
+import com.sicredi.digital.dto.VotacaoRespostaDTO;
+import com.sicredi.digital.dto.VotacaoResultadoRespostaDTO;
 import com.sicredi.digital.entity.Associado;
 import com.sicredi.digital.entity.Pauta;
 import com.sicredi.digital.entity.Votacao;
@@ -39,7 +40,7 @@ public class VotacaoService {
      * @return a Sessão de Votação criada.
      * @throws IllegalArgumentException se o identificador da Pauta não existir.
      */
-    public Votacao createVotacao(Long pautaId, Long timeout) throws IllegalArgumentException{
+    public VotacaoRespostaDTO createVotacao(Long pautaId, Long timeout) throws IllegalArgumentException {
 
         Optional<Pauta> pauta = pautaRepository.findById(pautaId);
         if (pauta.isPresent()) {
@@ -48,7 +49,9 @@ public class VotacaoService {
             votacao.setAtiva(true);
             votacao.setDuracao(timeout);
             votacao.setPauta(pauta.get());
-            return this.votacaoRepository.save(votacao);
+            Votacao votacaoPersist = this.votacaoRepository.save(votacao);
+            this.initSession(votacao.getId(), timeout);
+            return VotacaoRespostaDTO.transformaEmDTO(votacaoPersist);
         } else {
             throw new IllegalArgumentException("Pauta não existe");
         }
@@ -69,8 +72,7 @@ public class VotacaoService {
             e.printStackTrace();
         }
         Optional<Votacao> votacao = votacaoRepository.findById(votacaoId);
-        votacao.ifPresent(v-> v.setAtiva(false));
-        votacaoRepository.save(votacao.get());
+        votacao.ifPresent( v-> { v.setAtiva(false); votacaoRepository.save(votacao.get()); });
     }
 
     /**
@@ -78,16 +80,16 @@ public class VotacaoService {
      * @param votacaoId identificador da Sessão de Votação.
      * @return objeto contendo a Sessão de Votação mais uma contagem de votos a FAVOR e CONTRA desta sessão.
      */
-    public VotacaoResult getVotacao(Long votacaoId) {
+    public VotacaoResultadoRespostaDTO getVotacaoResultado(Long votacaoId) {
 
         Optional<Votacao> votacao = votacaoRepository.findById(votacaoId);
-        VotacaoResult votacaoResult = new VotacaoResult();
+        VotacaoResultadoRespostaDTO votacaoResultadoRespostaDTO = new VotacaoResultadoRespostaDTO();
         if (votacao.isPresent()) {
-            votacaoResult.setVotacao(votacao.get());
-            votacaoResult.setTotalFavor(votacao.get().getVotos().stream().filter(voto -> voto.isParecer()).count());
-            votacaoResult.setTotalContra(votacao.get().getVotos().stream().filter(voto -> !voto.isParecer()).count());
+            votacaoResultadoRespostaDTO.setVotacao(VotacaoRespostaDTO.transformaEmDTO(votacao.get()));
+            votacaoResultadoRespostaDTO.setTotalFavor(votacao.get().getVotos().stream().filter(voto -> voto.isParecer()).count());
+            votacaoResultadoRespostaDTO.setTotalContra(votacao.get().getVotos().stream().filter(voto -> !voto.isParecer()).count());
         }
-        return votacaoResult;
+        return votacaoResultadoRespostaDTO;
     }
 
     /**
@@ -99,7 +101,7 @@ public class VotacaoService {
      * @throws IllegalArgumentException se o identificador do Associado ou Sessão de Votação não existir ou se a sessão
      * já estiver sido encerrada.
      */
-    public Votacao addVoto(Long votacaoId, Long associadoId, boolean parecer) throws IllegalArgumentException{
+    public VotacaoRespostaDTO addVoto(Long votacaoId, Long associadoId, boolean parecer) throws IllegalArgumentException{
 
         Optional<Associado> associado = associadoRepository.findById(associadoId);
         if (associado.isPresent()) {
@@ -110,7 +112,8 @@ public class VotacaoService {
             Optional<Votacao> votacao = votacaoRepository.findById(votacaoId);
             if (votacao.isPresent() && votacao.get().isAtiva()) {
                 votacao.get().getVotos().add(voto);
-                return this.votacaoRepository.save(votacao.get());
+                Votacao votacaoPersist = this.votacaoRepository.save(votacao.get());
+                return VotacaoRespostaDTO.transformaEmDTO(votacaoPersist);
             } else {
                 throw new IllegalArgumentException("Sessão de votação não existe ou já encerrada");
             }

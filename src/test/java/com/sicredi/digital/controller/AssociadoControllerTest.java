@@ -1,7 +1,7 @@
 package com.sicredi.digital.controller;
 
 import com.sicredi.digital.AbstractTest;
-import com.sicredi.digital.entity.Associado;
+import com.sicredi.digital.dto.AssociadoDTO;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -25,17 +25,21 @@ public class AssociadoControllerTest extends AbstractTest {
 
         String uri = "/associado";
 
-        Associado associado = new Associado();
-        associado.setNome("Gustavo Antunes Carvalho");
-        associado.setCpf("222.333.222-33");
+        AssociadoDTO associadoDTO = new AssociadoDTO();
+        associadoDTO.setNome("João da Silva");
+        associadoDTO.setCpf("111.111.111-11");
+        associadoDTO.setEmail("joao@email.com");
 
         mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(associado)))
+                .content(asJsonString(associadoDTO)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.nome").value("João da Silva"))
+                .andExpect(jsonPath("$.cpf").value("111.111.111-11"))
+                .andExpect(jsonPath("$.email").value("joao@email.com"));
     }
 
     /**
@@ -52,8 +56,9 @@ public class AssociadoControllerTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.nome").value("Gustavo Antunes Carvalho"))
-                .andExpect(jsonPath("$.cpf").value("222.333.222-33"));
+                .andExpect(jsonPath("$.nome").value("João da Silva"))
+                .andExpect(jsonPath("$.cpf").value("111.111.111-11"))
+                .andExpect(jsonPath("$.email").value("joao@email.com"));
     }
 
     /**
@@ -84,8 +89,9 @@ public class AssociadoControllerTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[0].id").value("1"))
-                .andExpect(jsonPath("$.[0].nome").value("Gustavo Antunes Carvalho"))
-                .andExpect(jsonPath("$.[0].cpf").value("222.333.222-33"));;
+                .andExpect(jsonPath("$.[0].nome").value("João da Silva"))
+                .andExpect(jsonPath("$.[0].cpf").value("111.111.111-11"))
+                .andExpect(jsonPath("$.[0].email").value("joao@email.com"));
     }
 
     /**

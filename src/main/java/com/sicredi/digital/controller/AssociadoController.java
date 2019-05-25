@@ -1,5 +1,7 @@
 package com.sicredi.digital.controller;
 
+import com.sicredi.digital.dto.AssociadoDTO;
+import com.sicredi.digital.dto.AssociadoRespostaDTO;
 import com.sicredi.digital.entity.Associado;
 import com.sicredi.digital.repository.AssociadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +38,21 @@ public class AssociadoController {
      * @return o Associado conforme identificador.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public HttpEntity<Associado> findById(@PathVariable Long id) {
+    public HttpEntity<AssociadoRespostaDTO> findById(@PathVariable Long id) {
         Optional<Associado> associado = associadoRepository.findById(id);
-        HttpEntity response = associado.isPresent() ? new ResponseEntity<>(associado.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        HttpEntity response = associado.isPresent() ? new ResponseEntity<>(AssociadoRespostaDTO.transformaEmDTO(associado.get()), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
     /**
      * Cria um novo Associado.
-     * @param associado o Associado para criar.
+     * @param associadoDTO o Associado para criar.
      * @return o Associado criado.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public HttpEntity<Associado> create(@RequestBody Associado associado) {
-        Associado associadoNovo = associadoRepository.save(associado);
-        return new ResponseEntity<>(associadoNovo, HttpStatus.CREATED);
+    public HttpEntity<AssociadoRespostaDTO> create(@RequestBody AssociadoDTO associadoDTO) {
+        Associado associado = associadoRepository.save(associadoDTO.transformaParaObjeto());
+        return new ResponseEntity<>(AssociadoRespostaDTO.transformaEmDTO(associado), HttpStatus.CREATED);
     }
 
     /**

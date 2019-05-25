@@ -1,6 +1,7 @@
 package com.sicredi.digital.controller;
 
-import com.sicredi.digital.dto.VotacaoResult;
+import com.sicredi.digital.dto.VotacaoRespostaDTO;
+import com.sicredi.digital.dto.VotacaoResultadoRespostaDTO;
 import com.sicredi.digital.entity.Votacao;
 import com.sicredi.digital.service.VotacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,21 +31,20 @@ public class VotacaoController {
      * @return a Sessão de Votação criada.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public HttpEntity<Votacao> createVotacao(@RequestParam("pautaId") Long pautaId, @RequestParam(value="timeout", required = false, defaultValue = "60") Long timeout) {
-        Votacao votacao = votacaoService.createVotacao(pautaId, timeout);
-        votacaoService.initSession(votacao.getId(), timeout);
-        return new ResponseEntity<>(votacao, HttpStatus.CREATED);
+    public HttpEntity<VotacaoRespostaDTO> createVotacao(@RequestParam("pautaId") Long pautaId, @RequestParam(value="timeout", required = false, defaultValue = "60") Long timeout) {
+        VotacaoRespostaDTO votacaoRespostaDTO = votacaoService.createVotacao(pautaId, timeout);
+        return new ResponseEntity<>(votacaoRespostaDTO, HttpStatus.CREATED);
     }
 
     /**
-     * Retorna uma Sessão de Votação pelo seu identificador.
+     * Retorna o resultado de uma Sessão de Votação pelo seu identificador.
      * @param id identificador da Sessão de Votação.
      * @return objeto contendo a Sessão de Votação mais uma contagem de votos a FAVOR e CONTRA desta sessão.
      */
     @RequestMapping(method = RequestMethod.GET, value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<VotacaoResult> getVotacao(@PathVariable("id") Long id) {
-        VotacaoResult votacaoResult = votacaoService.getVotacao(id);
-        return votacaoResult.getVotacao() != null ? new ResponseEntity<>(votacaoResult, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public HttpEntity<VotacaoResultadoRespostaDTO> getVotacaoResultado(@PathVariable("id") Long id) {
+        VotacaoResultadoRespostaDTO votacaoResultadoRespostaDTO = votacaoService.getVotacaoResultado(id);
+        return votacaoResultadoRespostaDTO.getVotacao() != null ? new ResponseEntity<>(votacaoResultadoRespostaDTO, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -55,10 +55,10 @@ public class VotacaoController {
      * @return a Sessão de Votação com o novo voto computado.
      */
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
-    public HttpEntity<Votacao> addVoto(@PathVariable("id") Long id,
+    public HttpEntity<VotacaoRespostaDTO> addVoto(@PathVariable("id") Long id,
                                        @RequestParam("associadoId") Long associadoId,
                                        @RequestParam("parecer") boolean parecer) {
-        Votacao votacao = votacaoService.addVoto(id, associadoId, parecer);
-        return new ResponseEntity<>(votacao, HttpStatus.OK);
+        VotacaoRespostaDTO votacaoRespostaDTO = votacaoService.addVoto(id, associadoId, parecer);
+        return new ResponseEntity<>(votacaoRespostaDTO, HttpStatus.OK);
     }
 }

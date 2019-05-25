@@ -14,25 +14,29 @@ Vamos criar 4 associados:
 curl -X POST http://localhost:8080/associado \
   -d '{ 
 	"nome" : "João da Silva", 
-	"cpf": "111.111.111-11" 
+	"cpf": "111.111.111-11",
+	"e-mail": "joao@email.com"
 }'
 
 curl -X POST http://localhost:8080/associado \
   -d '{ 
 	"nome" : "Juca de Oliveira", 
-	"cpf": "222.222.222-22" 
+	"cpf": "222.222.222-22",
+	"e-mail": "juca@email.com"
 }'
 
 curl -X POST http://localhost:8080/associado \
   -d '{ 
 	"nome" : "José Adamastor", 
-	"cpf": "333.333.333-33" 
+	"cpf": "333.333.333-33",
+	"e-mail": "jose@email.com"
 }'
 
 curl -X POST http://localhost:8080/associado \
   -d '{ 
 	"nome" : "Associado para deletar", 
-	"cpf": "4444.4444.4444-44" 
+	"cpf": "4444.4444.4444-44",
+	"e-mail": "associado@email.com"
 }'
 
 #### Consultando Associados
@@ -47,22 +51,26 @@ Retorno:
     {
         "id": 1,
         "nome": "João da Silva",
-        "cpf": "111.111.111-11"
+        "cpf": "111.111.111-11",
+        "e-mail": "joao@email.com"
     }, 
     {
         "id": 2,
         "nome": "Juca de Oliveira",
-        "cpf": "222.222.222-22"
+        "cpf": "222.222.222-22",
+        "e-mail": "juca@email.com"
     }, 
     {
         "id": 3,
         "nome": "José Adamastor",
-        "cpf": "333.333.333-33"
+        "cpf": "333.333.333-33",
+        "e-mail": "jose@email.com"
     }, 
     {
         "id": 4,
         "nome": "Associado para deletar",
-        "cpf": "4444.4444.4444-44"
+        "cpf": "4444.4444.4444-44",
+        "e-mail": "associado@email.com"
     } 
 ]
 ```
@@ -75,7 +83,8 @@ Retorno:
 {
     "id": 1,
     "nome": "João da Silva",
-    "cpf": "111.111.111-11"
+    "cpf": "111.111.111-11",
+    "e-mail": "joao@email.com"
 }
 ```
 #### Deletando Associados
@@ -227,7 +236,8 @@ Retorno:
             "associado": {
                 "id": 1,
                 "nome": "João da Silva",
-                "cpf": "111.111.111-11"
+                "cpf": "111.111.111-11",
+                "e-mail": "joao@email.com"
             },
             "parecer": true
         }
@@ -275,7 +285,8 @@ Resultado:
                 "associado": {
                     "id": 1,
                     "nome": "João da Silva",
-                    "cpf": "111.111.111-11"
+                    "cpf": "111.111.111-11",
+                    "e-mail": "joao@email.com"
                 },
                 "parecer": true
             },
@@ -284,7 +295,8 @@ Resultado:
                 "associado": {
                     "id": 2,
                     "nome": "Juca de Oliveira",
-                    "cpf": "222.222.222-22"
+                    "cpf": "222.222.222-22",
+                    "e-mail": "juca@email.com"
                 },
                 "parecer": true
             },
@@ -293,7 +305,8 @@ Resultado:
                 "associado": {
                     "id": 3,
                     "nome": "José Adamastor",
-                    "cpf": "333.333.333-33"
+                    "cpf": "333.333.333-33",
+                    "e-mail": "jose@email.com"
                 },
                 "parecer": false
             }
@@ -324,7 +337,8 @@ Resultado:
                 "associado": {
                     "id": 1,
                     "nome": "João da Silva",
-                    "cpf": "111.111.111-11"
+                    "cpf": "111.111.111-11",
+                    "e-mail": "joao@email.com"
                 },
                 "parecer": false
             },
@@ -333,7 +347,8 @@ Resultado:
                 "associado": {
                     "id": 2,
                     "nome": "Juca de Oliveira",
-                    "cpf": "222.222.222-22"
+                    "cpf": "222.222.222-22",
+                    "e-mail": "juca@email.com"
                 },
                 "parecer": false
             },
@@ -342,7 +357,8 @@ Resultado:
                 "associado": {
                     "id": 3,
                     "nome": "José Adamastor",
-                    "cpf": "333.333.333-33"
+                    "cpf": "333.333.333-33",
+                    "e-mail": "jose@email.com"
                 },
                 "parecer": true
             }

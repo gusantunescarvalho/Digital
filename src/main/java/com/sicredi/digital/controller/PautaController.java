@@ -1,5 +1,7 @@
 package com.sicredi.digital.controller;
 
+import com.sicredi.digital.dto.PautaDTO;
+import com.sicredi.digital.dto.PautaRespostaDTO;
 import com.sicredi.digital.entity.Pauta;
 import com.sicredi.digital.repository.PautaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +38,21 @@ public class PautaController {
      * @return a Pauta conforme identificador.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public HttpEntity<Pauta> findById(@PathVariable Long id) {
+    public HttpEntity<PautaRespostaDTO> findById(@PathVariable Long id) {
         Optional<Pauta> pauta = pautaRepository.findById(id);
-        HttpEntity response = pauta.isPresent() ? new ResponseEntity<>(pauta.get(), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        HttpEntity response = pauta.isPresent() ? new ResponseEntity<>(PautaRespostaDTO.transformaEmDTO(pauta.get()), HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return response;
     }
 
     /**
      * Cria uma nova Pauta.
-     * @param pauta a Pauta para criar.
+     * @param pautaDTO a Pauta para criar.
      * @return a Pauta criada.
      */
     @RequestMapping(method = RequestMethod.POST)
-    public HttpEntity<Pauta> create(@RequestBody Pauta pauta) {
-        Pauta pautaNova = pautaRepository.save(pauta);
-        return new ResponseEntity<>(pautaNova, HttpStatus.CREATED);
+    public HttpEntity<PautaRespostaDTO> create(@RequestBody PautaDTO pautaDTO) {
+        Pauta pauta = pautaRepository.save(pautaDTO.transformaParaObjeto());
+        return new ResponseEntity<>(PautaRespostaDTO.transformaEmDTO(pauta), HttpStatus.CREATED);
     }
 
     /**

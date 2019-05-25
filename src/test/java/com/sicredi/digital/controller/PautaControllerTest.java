@@ -1,7 +1,7 @@
 package com.sicredi.digital.controller;
 
 import com.sicredi.digital.AbstractTest;
-import com.sicredi.digital.entity.Pauta;
+import com.sicredi.digital.dto.PautaDTO;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -23,17 +23,19 @@ public class PautaControllerTest extends AbstractTest {
 
         String uri = "/pauta";
 
-        Pauta pauta = new Pauta();
-        pauta.setTitulo("Nova Previdência");
-        pauta.setDescricao("Votação para aprovar a nova previdência");
+        PautaDTO pautaDTO = new PautaDTO();
+        pautaDTO.setTitulo("Nova Previdência");
+        pautaDTO.setDescricao("Votação para aprovar a nova previdência");
 
         mvc.perform(MockMvcRequestBuilders.post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(pauta)))
+                .content(asJsonString(pautaDTO)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.id").value("1"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.titulo").value("Nova Previdência"))
+                .andExpect(jsonPath("$.descricao").value("Votação para aprovar a nova previdência"));
     }
 
     /**
