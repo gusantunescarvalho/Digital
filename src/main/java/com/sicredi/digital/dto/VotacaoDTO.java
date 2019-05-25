@@ -22,7 +22,7 @@ public class VotacaoDTO {
 
     public Votacao transformaParaObjeto(){
         Set<Voto> votosObj = new LinkedHashSet<>();
-        votos.stream().map( v -> votosObj.add( v.transformaParaObjeto() ));
+        votos.stream().forEach(v -> votosObj.add(v.transformaParaObjeto()));
         return new Votacao(ativa, dataHoraAtivacao, duracao, pauta.transformaParaObjeto(), votosObj);
     }
 }

@@ -22,7 +22,7 @@ public class VotacaoRespostaDTO {
 
     public static VotacaoRespostaDTO transformaEmDTO(Votacao votacao) {
         Set<VotoRespostaDTO> votosDTO = new LinkedHashSet<>();
-        votacao.getVotos().stream().map( v -> votosDTO.add( VotoRespostaDTO.transformaEmDTO(v)));
+        votacao.getVotos().stream().forEach(v -> votosDTO.add(VotoRespostaDTO.transformaEmDTO(v)));
         return new VotacaoRespostaDTO(votacao.getId(), votacao.isAtiva(), votacao.getDataHoraAtivacao(), votacao.getDuracao(), PautaRespostaDTO.transformaEmDTO(votacao.getPauta()), votosDTO);
     }
 }
